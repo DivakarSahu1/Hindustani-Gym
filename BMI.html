@@ -1,83 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- By Ali Aslan -->
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
     <title>BMI Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .bmi-chart-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .bmi-underweight {
+        background-color: #ff6347;
+      }
+      .bmi-healthy {
+        background-color: #32cd32;
+      }
+      .bmi-overweight {
+        background-color: #ffd700;
+      }
+      .bmi-obesity {
+        background-color: #ff4500;
+      }
+    </style>
   </head>
-  <body>
-    <div class="container">
-      <div class="box">
-        <h1>BMI Calculator</h1>
-        <div class="content">
-          <div class="input">
-            <label for="height">Age</label>
-            <input
-              type="text"
-              class="text-input"
-              id="age"
-              autocomplete="off"
-              required
-            />
-          </div>
-
-          <div class="gender">
-            <label class="container">
-              <input type="radio" name="radio" id="m" />
-              <p class="text">Male</p>
-              <span class="checkmark"></span>
-            </label>
-
-            <label class="container">
-              <input type="radio" name="radio" id="f" />
-              <p class="text">Female</p>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div class="containerHW">
-            <div class="inputH">
-              <label for="height">Height(cm)</label>
-              <input type="number" id="height" required />
+  <body class="bg-gray-100">
+    <!-- BMI Calculator Section -->
+    <section class="py-12">
+      <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-center mb-8">BMI Calculator</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- BMI Form -->
+          <div>
+            <form id="bmi-form" class="space-y-6">
+              <div>
+                <label
+                  for="bmi-age"
+                  class="block text-sm font-medium text-gray-700"
+                  >Age</label
+                >
+                <input
+                  type="number"
+                  id="bmi-age"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Gender</label
+                >
+                <div class="mt-1 flex space-x-4">
+                  <label class="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="bmi-gender"
+                      value="male"
+                      class="form-radio h-5 w-5 text-blue-600"
+                      required
+                    />
+                    <span class="ml-2 text-gray-700">Male</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="bmi-gender"
+                      value="female"
+                      class="form-radio h-5 w-5 text-blue-600"
+                      required
+                    />
+                    <span class="ml-2 text-gray-700">Female</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label
+                  for="bmi-height"
+                  class="block text-sm font-medium text-gray-700"
+                  >Height (cm)</label
+                >
+                <input
+                  type="number"
+                  id="bmi-height"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="bmi-weight"
+                  class="block text-sm font-medium text-gray-700"
+                  >Weight (kg)</label
+                >
+                <input
+                  type="number"
+                  id="bmi-weight"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                onclick="calculateBMI()"
+                class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+              >
+                Calculate BMI
+              </button>
+            </form>
+            <div id="bmi-result" class="mt-6 text-center hidden">
+              <p class="text-xl font-bold">
+                Your BMI is:
+                <span id="bmi-value" class="text-blue-500">00.00</span>
+              </p>
+              <p class="text-lg">
+                <span id="bmi-category" class="font-bold"></span>
+              </p>
             </div>
-
-            <div class="inputW">
-              <label for="weight">Weight(kg)</label>
-              <input type="number" id="weight" required />
+          </div>
+          <!-- BMI Chart -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-700 mb-4">BMI Categories</h3>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="bmi-chart-color bmi-underweight"></div>
+                <span>Underweight</span>
+              </div>
+              <div class="flex items-center">
+                <div class="bmi-chart-color bmi-healthy"></div>
+                <span>Healthy Weight</span>
+              </div>
+              <div class="flex items-center">
+                <div class="bmi-chart-color bmi-overweight"></div>
+                <span>Overweight</span>
+              </div>
+              <div class="flex items-center">
+                <div class="bmi-chart-color bmi-obesity"></div>
+                <span>Obesity</span>
+              </div>
             </div>
           </div>
-
-          <button class="calculate" id="submit" onclick="calculate();">
-            Calculate BMI
-          </button>
-        </div>
-        <div class="result">
-          <p>Your BMI is</p>
-          <div id="result">00.00</div>
-          <p class="comment"></p>
-        </div>
-        <div class="footer">
-          <a class="footer-text" target="_blank" href="https://myskypower.net/"
-            >By My Sky Power</a
-          >
         </div>
       </div>
-    </div>
+    </section>
 
-    <a href="#" target="_blank" class="linkDownload">Download Source Code</a>
+    <script>
+      function calculateBMI() {
+        const age = document.getElementById("bmi-age").value;
+        const height = document.getElementById("bmi-height").value;
+        const weight = document.getElementById("bmi-weight").value;
 
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p id="modalText"></p>
-      </div>
-    </div>
+        if (height > 0 && weight > 0) {
+          const bmi = (weight / (height / 100) ** 2).toFixed(2);
+          document.getElementById("bmi-value").innerText = bmi;
 
-    <script src="script.js"></script>
+          let category = "";
+          if (bmi < 18.5) {
+            category = "Underweight";
+          } else if (bmi >= 18.5 && bmi < 24.9) {
+            category = "Healthy Weight";
+          } else if (bmi >= 25 && bmi < 29.9) {
+            category = "Overweight";
+          } else {
+            category = "Obesity";
+          }
+          document.getElementById("bmi-category").innerText = category;
+          document.getElementById("bmi-result").classList.remove("hidden");
+        } else {
+          alert("Please enter valid height and weight.");
+        }
+      }
+    </script>
   </body>
 </html>
